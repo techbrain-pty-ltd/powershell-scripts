@@ -1,0 +1,6 @@
+Add-VMNetworkAdapter –ManagementOS –Name ESA-Management –SwitchName ESA-HyperV-Switch
+Set-VMNetworkAdapterVlan –ManagementOS –VMNetworkAdapterName ESA-Management –Access –VlanId 1
+Rename-NetAdapter -Name "vEthernet (ESA-Management)" -NewName ESA-Management
+New-NetIPAddress -InterfaceAlias ESA-Management -IPAddress 172.21.101.2 -PrefixLength 24 -DefaultGateway 172.21.101.254 -Confirm:$false
+Set-DnsClientServerAddress -InterfaceAlias ESA-Management -ServerAddresses 172.21.101.10, 172.21.101.11
+Set-VMNetworkAdapter -ManagementOS -name ESA-Management -MinimumBandwidthWeight 10

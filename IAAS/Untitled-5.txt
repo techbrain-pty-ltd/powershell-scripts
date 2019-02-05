@@ -1,0 +1,13 @@
+Connect-MSOLService
+
+
+Import-CSV C:\Temp\IntegraO365usersPasswords.csv |%{Set-MsolUserPassword -userPrincipalName $_.UserPrincipalName –NewPassword $_.Passwords -ForceChangePassword $False}
+
+#Get the VM's NetWork Adapters MAC Addresses
+#Get-VMNetworkAdapter -VMName $VMName
+
+#Get-VMNetworkAdapter -VMName $VMName | Where-Object -Property MacAddress -EQ "**********" | Set-VMNetworkAdapterVlan -Trunk -AllowedVlanIdList 1-1024 -NativeVlanId 0
+
+#Set All Management Adaptoers to Trunk
+
+#Set-VMNetworkAdapterVlan -ManagementOS -VMNetworkAdapterName "NAME_HERE" -AllowedVlanIdList 1-1024 -NativeVlanId 0 -Trunk

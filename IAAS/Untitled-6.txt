@@ -1,0 +1,26 @@
+Add-VMNetworkAdapter -VMName "ESA-IAAS-HV-01" -SwitchName "Customer Switch" -Name "Management NIC"
+Set-VMNetworkAdapter -VMName "ESA-IAAS-HV-01" -Name "Management NIC" -MacAddressSpoofing On
+Add-VMNetworkAdapter -VMName "ESA-IAAS-HV-01" -SwitchName "Customer Switch" -Name "VMNetwork NIC"
+Set-VMNetworkAdapter -VMName "ESA-IAAS-HV-01" -Name "VMNetwork NIC" -MacAddressSpoofing On
+Add-VMNetworkAdapter -VMName "ESA-IAAS-HV-01" -SwitchName "Customer Switch" -Name "Cluster NIC"
+Set-VMNetworkAdapter -VMName "ESA-IAAS-HV-01" -Name "Cluster NIC" -MacAddressSpoofing On
+Add-VMNetworkAdapter -VMName "ESA-IAAS-HV-01" -SwitchName "Customer Switch" -Name "LiveMigration NIC"
+Set-VMNetworkAdapter -VMName "ESA-IAAS-HV-01" -Name "LiveMigration NIC" -MacAddressSpoofing On
+Add-VMNetworkAdapter -VMName "ESA-IAAS-HV-01" -SwitchName "Customer Switch" -Name "DMZ NIC"
+Set-VMNetworkAdapter -VMName "ESA-IAAS-HV-01" -Name "DMZ NIC" -MacAddressSpoofing On
+
+#On the Nested host
+Get-NetAdapter
+#check the adapters (use mac address to determine order)
+Rename-NetAdapter -Name "Ethernet 7" -NewName "Management-VLAN"
+Rename-NetAdapter -Name "Ethernet 8" -NewName "VMNetwork-VLAN"
+Rename-NetAdapter -Name "Ethernet 9" -NewName "Cluster-VLAN"
+Rename-NetAdapter -Name "Ethernet 10" -NewName "LiveMigration-VLAN"
+Rename-NetAdapter -Name "Ethernet 11" -NewName "DMZ-VLAN"
+
+New-VMSwitch -Name HyperV-Management-Switch –NetAdapterName "Management-VLAN" –MinimumBandwidthMode Weight –AllowManagementOS $true
+New-VMSwitch -Name HyperV-VMNetwork-Switch –NetAdapterName "VMNetwork-VLAN" –MinimumBandwidthMode Weight –AllowManagementOS $true
+New-VMSwitch -Name HyperV-Cluster-Switch –NetAdapterName "Cluster-VLAN" –MinimumBandwidthMode Weight –AllowManagementOS $true
+New-VMSwitch -Name HyperV-LiveMigration-Switch –NetAdapterName "LiveMigration-VLAN" –MinimumBandwidthMode Weight –AllowManagementOS $true
+New-VMSwitch -Name HyperV-DMZ-Switch –NetAdapterName "DMZ-VLAN" –MinimumBandwidthMode Weight –AllowManagementOS $true
+

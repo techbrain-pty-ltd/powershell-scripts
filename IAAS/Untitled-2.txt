@@ -1,0 +1,20 @@
+Remove-VMNetworkAdapter –ManagementOS –Name ESA-VMNetwork –SwitchName ESA-HyperV-Switch
+Remove-VMNetworkAdapter –ManagementOS –Name ESA-LiveMigration –SwitchName ESA-HyperV-Switch
+Remove-VMNetworkAdapter –ManagementOS –Name ESA-Management –SwitchName ESA-HyperV-Switch
+Remove-VMNetworkAdapter –ManagementOS –Name ESA-Cluster –SwitchName ESA-HyperV-Switch
+
+
+New-NetLbfoTeam -Name ESA-IAAS-HV-01-NIC-TEAM-1 –TeamMembers "Ethernet","Ethernet 2" -TeamingMode SwitchIndependant -LoadBalancingAlgorithm HyperVPorts -Confirm:$false
+
+New-VMSwitch -Name ESA-HyperV-Switch –NetAdapterName ESA-IAAS-HV-01-NIC-TEAM-1 –MinimumBandwidthMode Weight –AllowManagementOS $false
+
+Add-VMNetworkAdapter –ManagementOS –Name ESA-Domain-Connection –SwitchName HyperV-Management-Switch
+Set-VMNetworkAdapterVlan –ManagementOS –VMNetworkAdapterName ESA-Domain-Connection –Access –VlanId 1
+Rename-NetAdapter -Name "vEthernet (ESA-Domain-Connection)" -NewName ESA-Domain-Connection
+New-NetIPAddress -InterfaceAlias ESA-Domain-Connection -IPAddress 172.21.101.1 -PrefixLength 24 -DefaultGateway 172.21.101.254 -Confirm:$false
+
+Add-VMNetworkAdapter –ManagementOS –Name ESA-VMNetwork –SwitchName ESA-HyperV-Switch
+Set-VMNetworkAdapterVlan –ManagementOS –VMNetworkAdapterName ESA-VMNetwork –Access –VlanId 2
+Rename-NetAdapter -Name "vEthernet (ESA-VMNetwork)" -NewName ESA-VMNetwork
+New-NetIPAddress -InterfaceAlias ESA-VMNetwork -IPAddress 172.21.103.2 -PrefixLength 24 -Confirm:$false
+Set-VMNetworkAdapter -ManagementOS -name ESA-VMNetwork -MinimumBandwidthWeight 30

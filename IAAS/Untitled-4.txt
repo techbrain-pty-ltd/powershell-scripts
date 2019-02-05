@@ -1,0 +1,1 @@
+New-VMSwitch -Name ESA-HyperV-Switch –NetAdapterName "ESA-Management-VLAN1","ESA-VMNetwork-VLAN2","ESA-Cluster-VLAN3",ESA-LiveMigration-VLAN4","ESA-DMZ-VLAN5" –MinimumBandwidthMode Weight –AllowManagementOS $false
